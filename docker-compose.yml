@@ -8,7 +8,6 @@ services:
   ports:
    - '16261:16261/udp'
    - '16262:16262/udp'
-   - '27015:27015/tcp'
   volumes:
    # Arquivos do jogo (SteamCMD) - persiste entre restarts
    - pz-server-files:/home/pzuser/pzserver
