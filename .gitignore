@@ -3,3 +3,6 @@ data/
 
 # Variáveis de ambiente com senhas
 .env
+
+# Logs de crash
+*.dmp

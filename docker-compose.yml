@@ -1,61 +1,35 @@
 services:
  zomboid-server:
-  image: docker.io/renegademaster/zomboid-dedicated-server:latest
+  build: .
   container_name: pz-dedicated-server
   restart: unless-stopped
   stdin_open: true
   tty: true
   ports:
-   # Porta principal de conexão (obrigatória)
-   - '${DEFAULT_PORT:-16261}:${DEFAULT_PORT:-16261}/udp'
-   # Porta UDP auxiliar para conexões (obrigatória)
-   - '${UDP_PORT:-16262}:${UDP_PORT:-16262}/udp'
-   # Porta RCON para comandos remotos (opcional)
-   - '${RCON_PORT:-27015}:${RCON_PORT:-27015}/tcp'
+   - '16261:16261/udp'
+   - '16262:16262/udp'
+   - '27015:27015/tcp'
   volumes:
-   # Dados do servidor (arquivos do jogo via SteamCMD)
-   - ./data/server-files:/home/steam/ZomboidDedicatedServer
-   # Configuração, saves e logs do servidor
-   - ./data/config:/home/steam/Zomboid
+   # Arquivos do jogo (SteamCMD) - persiste entre restarts
+   - pz-server-files:/home/pzuser/pzserver
+   # Configurações, saves e logs
+   - pz-config:/home/pzuser/Zomboid
   environment:
-   # === VERSÃO DO JOGO ===
-   # "public" para stable, "unstable" para Build 42 beta
-   - GAME_VERSION=${GAME_VERSION:-unstable}
-
-   # === CREDENCIAIS ADMIN ===
-   - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
-   - ADMIN_PASSWORD=${ADMIN_PASSWORD:-changeme}
-
-   # === CONFIGURAÇÃO DO SERVIDOR ===
-   - SERVER_NAME=${SERVER_NAME:-PZServer}
-   - SERVER_PASSWORD=${SERVER_PASSWORD:-}
-   - PUBLIC_SERVER=${PUBLIC_SERVER:-true}
-   - MAX_PLAYERS=${MAX_PLAYERS:-16}
-   - PAUSE_ON_EMPTY=${PAUSE_ON_EMPTY:-true}
-   - AUTOSAVE_INTERVAL=${AUTOSAVE_INTERVAL:-15}
-
-   # === REDE ===
-   - BIND_IP=0.0.0.0
-   - DEFAULT_PORT=${DEFAULT_PORT:-16261}
-   - UDP_PORT=${UDP_PORT:-16262}
-   - RCON_PORT=${RCON_PORT:-27015}
-   - RCON_PASSWORD=${RCON_PASSWORD:-changeme_rcon}
-
-   # === PERFORMANCE ===
-   # Build 42 é mais pesada - 8GB recomendado
-   - MAX_RAM=${MAX_RAM:-8192m}
-   - GC_CONFIG=${GC_CONFIG:-ZGC}
-
-   # === MAPAS ===
-   - MAP_NAMES=${MAP_NAMES:-Muldraugh, KY}
-
-   # === STEAM ===
-   - USE_STEAM=${USE_STEAM:-true}
-   - STEAM_VAC=${STEAM_VAC:-true}
-
-   # === MODS (separados por ;) ===
-   - MOD_NAMES=${MOD_NAMES:-}
-   - MOD_WORKSHOP_IDS=${MOD_WORKSHOP_IDS:-}
-
-   # === TIMEZONE ===
+   # Build 42 unstable (deixe vazio para stable/public)
+   - PZ_BETA_BRANCH=${PZ_BETA_BRANCH:-unstable}
+   # Credenciais admin
+   - PZ_ADMIN_USERNAME=${PZ_ADMIN_USERNAME:-admin}
+   - PZ_ADMIN_PASSWORD=${PZ_ADMIN_PASSWORD:-changeme}
+   # Nome do servidor
+   - PZ_SERVER_NAME=${PZ_SERVER_NAME:-PZServer}
+   # RAM (Build 42 recomenda 8g+)
+   - PZ_JAVA_XMS=${PZ_JAVA_XMS:-4g}
+   - PZ_JAVA_XMX=${PZ_JAVA_XMX:-8g}
+   # Steam VAC
+   - PZ_STEAM_VAC=${PZ_STEAM_VAC:-true}
+   # Timezone
    - TZ=${TZ:-America/Sao_Paulo}
+
+volumes:
+ pz-server-files:
+ pz-config:
