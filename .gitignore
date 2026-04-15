@@ -1,6 +1,3 @@
-# Dados do servidor (muito grandes para versionamento)
-data/
-
 # Variáveis de ambiente com senhas
 .env
 
