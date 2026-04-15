@@ -13,8 +13,8 @@ services:
    - pz-server-files:/home/pzuser/pzserver
    # Configurações, saves e logs
    - pz-config:/home/pzuser/Zomboid
-   # Lista de mods da Workshop (um ID por linha)
-   - ./data/config/workshop.txt:/home/pzuser/workshop.txt:ro
+   # Configurações customizadas (templates copiados no primeiro boot)
+   - ./data/config:/home/pzuser/config-templates:ro
   environment:
    # Build 42 unstable (deixe vazio para stable/public)
    - PZ_BETA_BRANCH=${PZ_BETA_BRANCH:-unstable}
