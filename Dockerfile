@@ -30,8 +30,10 @@ ENV PZ_JAVA_XMX="8g"
 ENV PZ_STEAM_VAC="true"
 ENV PZ_BETA_BRANCH=""
 
-# Criar usuário não-root
-RUN useradd -m -s /bin/bash pzuser
+# Criar usuário não-root e diretórios com ownership correto
+RUN useradd -m -s /bin/bash pzuser \
+    && mkdir -p /home/pzuser/pzserver /home/pzuser/Zomboid \
+    && chown -R pzuser:pzuser /home/pzuser
 COPY --chmod=755 entrypoint.sh /usr/local/bin/entrypoint.sh
 
 WORKDIR /home/pzuser
